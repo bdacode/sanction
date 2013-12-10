@@ -3,7 +3,7 @@
 from functools import wraps
 from json import loads
 from datetime import datetime, timedelta
-from time import mktime
+from calendar import timegm
 try:
     from urllib import urlencode
     from urllib2 import Request, urlopen
@@ -138,8 +138,8 @@ class Client(object):
         # expires_in is RFC-compliant. if anything else is used by the
         # provider, token_expires must be set manually
         if hasattr(self, 'expires_in'):
-            self.token_expires = mktime((datetime.utcnow() + timedelta(
-                seconds=self.expires_in)).timetuple())
+            self.token_expires = int(timegm((datetime.utcnow() + timedelta(
+                seconds=self.expires_in)).timetuple()))
 
     def refresh(self):
         self.request_token(refresh_token=self.refresh_token,
